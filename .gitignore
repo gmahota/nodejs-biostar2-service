@@ -58,3 +58,6 @@ yarn.lock
 # dotenv environment variables file
 .env
 
+/dist
+
+/content

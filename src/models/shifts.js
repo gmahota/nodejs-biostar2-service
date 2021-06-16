@@ -1,4 +1,4 @@
-import mariadb from "./../database/mariadb.js";
+var mariadb = require("./../database/mariadb.js");
 
 var getShifts = async () => {
   let conn;
@@ -49,4 +49,4 @@ var getShift = async (id) => {
   }
 };
 
-export default { getShifts, getShift };
+module.exports= { getShifts, getShift };

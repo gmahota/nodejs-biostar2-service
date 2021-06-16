@@ -1,5 +1,5 @@
-import mariadb from "./../database/mariadb.js";
-import Excell from "./../services/excel.js";
+var mariadb = require ("./../database/mariadb.js") ;
+var Excell =  require ("./../services/excel.js");
 
 
 var getTimeCardReport = async () => {
@@ -96,4 +96,4 @@ var fillSimpleExcell = (rows) => {
 
 
 
-export default { getTimeCardReport, fillExcell, getTimeCardReportForSimpleShchedule , fillSimpleExcell};
+module.exports =  { getTimeCardReport, fillExcell, getTimeCardReportForSimpleShchedule , fillSimpleExcell};

@@ -1,4 +1,4 @@
-import mariadb from "mariadb";
+var mariadb = require ("mariadb");
 
 const getConnection = async () => {
   var pool = mariadb.createPool({
@@ -13,6 +13,6 @@ const getConnection = async () => {
   return await pool.getConnection();
 };
 
-export default {
-  getConnection,
-};
+module.exports={
+  getConnection
+}

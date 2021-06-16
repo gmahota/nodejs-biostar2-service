@@ -1,12 +1,12 @@
-import { Router } from "express";
+var Router =require ("express").Router;
 
-import timeCardReport from "./models/timeCardRecord.js";
-import timeCardReportDetail from "./models/timeCardReportDetail.js";
-import employees from "./models/employees.js";
-import departments from "./models/departments.js";
-import shifts from "./models/shifts.js";
-import path from "path";
-import punchLogService from "./services/punchLog.js"
+var timeCardReport =require ("./models/timeCardRecord.js");
+var timeCardReportDetail =require ("./models/timeCardReportDetail.js");
+var employees =require ("./models/employees.js");
+var departments =require ("./models/departments.js");
+var shifts =require ("./models/shifts.js");
+var path =require ("path");
+var punchLogService =require ("./services/punchLog.js")
 
 const routes = Router();
 
@@ -38,8 +38,9 @@ routes.get("/", async function (req, res) {
   res.send("WellCome!");
 });
 
-routes.get("/api/punchlog", async function (req, res) {
-  punchLogService.getPunchLogs(function (result){
+routes.get("/api/punchlog/:id", async function (req, res) {
+const {id }=req.params;
+  punchLogService.getPunchLogs(id, function ( result){
     sendJsonResult(res, result)
   });
 })
@@ -113,4 +114,4 @@ function sendJsonResult(res, obj) {
   res.send(JSON.stringify(obj));
 }
 
-export default routes;
+module.exports = routes;
