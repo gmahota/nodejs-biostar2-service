@@ -25,16 +25,30 @@ var getPunchLogs = async (id, callback) => {
   try {
     conn =await getConnection();
 
-    await conn.query(
-      `select p1.id,p1.user_id,p1.user_name,
-         p1.devdt as date,
-         p1.devnm as device,p1.devid as deviceId  from punchlog p1 where p1.id > ${id};
-      `, function(err,result) {
-        if (err) console.log(err);
-        callback(result)
-      }
-    );
-
+    switch(database_type){
+      case "mysql":
+        await conn.query(
+          `select p1.id,p1.user_id,p1.user_name,
+             p1.devdt as date,
+             p1.devnm as device,p1.devid as deviceId  from punchlog p1 where p1.id > ${id}
+             limit 4
+             ;
+          `, function(err,result) {
+            if (err) console.log(err);
+            callback(result)
+          }
+        );
+      case "mariadb":let rows = await conn.query(
+        `select p1.id,p1.user_id,p1.user_name,
+           p1.devdt as date,
+           p1.devnm as device,p1.devid as deviceId  from punchlog p1 where p1.id > ${id}
+           limit 4
+           ;
+        `
+      );
+  
+      callback(rows)
+    }
   } catch (err) {
     throw err;
   } finally {
