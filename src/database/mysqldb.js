@@ -1,7 +1,7 @@
-import mariadb from "mariadb";
+import mysql from "mysql2";
 
 const getConnection = async () => {
-  var pool = mariadb.createPool({
+  var pool = mysql.createPool({
     host: process.env.MariaBd_HOST,
     database: process.env.MariaDb_DATABASE,
     user: process.env.MariaDb_USERNAME,
