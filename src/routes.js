@@ -38,11 +38,41 @@ routes.get("/", async function (req, res) {
   res.send("WellCome!");
 });
 
-routes.get("/api/punchlog", async function (req, res) {
-  punchLogService.getPunchLogs(function (result){
+routes.get("/api/punchlog/:id", async function (req, res) {
+const {id }=req.params;
+  punchLogService.getPunchLogs(id, function ( result){
     sendJsonResult(res, result)
   });
 })
+routes.get("/api/users/:id", async function (req, res) {
+  const {id }=req.params;
+    punchLogService.getUsers(id, function ( result){
+      sendJsonResult(res, result)
+    });
+  })
+
+  routes.get("/api/users/update/:id", async function (req, res) {
+    const {id }=req.params;
+      punchLogService.getUsersForUpdate(id, function ( result){
+        sendJsonResult(res, result)
+      });
+    })
+
+    routes.get("/api/usergroups/:id", async function (req, res) {
+      const {id }=req.params;
+        punchLogService.getUserGroups(id, function ( result){
+          sendJsonResult(res, result)
+        });
+      })
+    
+      routes.get("/api/usergroups/update/:id", async function (req, res) {
+        const {id }=req.params;
+          punchLogService.getUserGroupsForUpdate(id, function ( result){
+            sendJsonResult(res, result)
+          });
+        })
+    
+
 
 routes.get("/api/timecards/detail", async (req, res) => {
   const items = await timeCardReportDetail.getTimeCardReportDetail();
