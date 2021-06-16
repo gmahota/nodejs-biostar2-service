@@ -1,11 +1,9 @@
 import mariadb from "../database/mariadb.js";
 import mysql from "../database/mysql.js";
 
-
 var getConnection= async() =>{
   const database_type =process.env.Database_Type||"";
 
-  console.log(database_type)
   try{
 
     switch(database_type){
@@ -21,14 +19,21 @@ var getConnection= async() =>{
   }
 };
 
-var mysqlQuery = async (table) => {
+var getPunchLogs = async (callback) => {
   let conn;
   try {
     conn =await getConnection();
 
-    let rows = await conn.query(`select * from ${table}`);
+    await conn.query(
+      `select p1.id,p1.user_id,p1.user_name,
+         p1.devdt as date,
+         p1.devnm as device,p1.devid as deviceId  from punchlog p1
+      `, function(err,result) {
+        if (err) console.log(err);
+        callback(result)
+      }
+    );
 
-    return rows;
   } catch (err) {
     throw err;
   } finally {
@@ -36,23 +41,6 @@ var mysqlQuery = async (table) => {
   }
 };
 
-var getTimeCardReportDetail = async () => {
-  let conn;
-  try {
-
-    conn = await mariadb.getConnection();
-    let rows = await conn.query(`select * from View_TimeCard;`);
-
-    return rows;
-
-  } catch (err) {
-    throw err;
-  } finally {
-    if (conn) conn.release(); //release to pool
-  }
-};
-
 export default {
-  getTimeCardReportDetail,
-  mysqlQuery,
+  getPunchLogs
 };

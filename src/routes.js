@@ -6,6 +6,7 @@ import employees from "./models/employees.js";
 import departments from "./models/departments.js";
 import shifts from "./models/shifts.js";
 import path from "path";
+import punchLogService from "./services/punchLog.js"
 
 const routes = Router();
 
@@ -36,6 +37,12 @@ const routes = Router();
 routes.get("/", async function (req, res) {
   res.send("WellCome!");
 });
+
+routes.get("/api/punchlog", async function (req, res) {
+  punchLogService.getPunchLogs(function (result){
+    sendJsonResult(res, result)
+  });
+})
 
 routes.get("/api/timecards/detail", async (req, res) => {
   const items = await timeCardReportDetail.getTimeCardReportDetail();
