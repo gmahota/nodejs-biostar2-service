@@ -1,4 +1,4 @@
-import mysql from "mysql";
+var mysql = require ("mysql");
 
 const getConnection = async () => {
   var pool = mysql.createPool({
@@ -26,6 +26,6 @@ const createConnection = async () => {
   return await pool;
 };
 
-export default {
+module.exports =  {
   getConnection,createConnection
 };

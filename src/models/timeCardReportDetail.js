@@ -1,5 +1,5 @@
-import mariadb from "../database/mariadb.js";
-import mysql from "../database/mysql.js";
+var mariadb = require ("./../database/mariadb.js") ;
+var mysql = require("../database/mysql.js");
 
 
 var getConnection= async() =>{
@@ -52,7 +52,7 @@ var getTimeCardReportDetail = async () => {
   }
 };
 
-export default {
+module.exports ={
   getTimeCardReportDetail,
   mysqlQuery,
-};
+}

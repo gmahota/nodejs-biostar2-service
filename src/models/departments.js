@@ -1,4 +1,4 @@
-import mariadb from "./../database/mariadb.js";
+var mariadb = require ("./../database/mariadb.js") ;
 
 var getDepartments = async () => {
   let conn;
@@ -49,4 +49,4 @@ var getDepartment = async (id) => {
   }
 };
 
-export default { getDepartments, getDepartment };
+module.exports=  { getDepartments, getDepartment };

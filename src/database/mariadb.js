@@ -1,18 +1,18 @@
-import mariadb from "mariadb";
+var mariadb = require ("mariadb/callback");
 
 const getConnection = async () => {
-  var pool = mariadb.createPool({
-    host: process.env.MariaBd_HOST,
-    database: process.env.MariaDb_DATABASE,
-    user: process.env.MariaDb_USERNAME,
-    password: process.env.MariaDb_PASSWORD,
+  var pool = mariadb.createConnection({
+    host: process.env.Database_HOST,
+    database: process.env.Database,
+    user: process.env.Database_USERNAME,
+    password: process.env.Database_PASSWORD,
     connectionLimit: 5,
-    port: process.env.MariaDb_PORT,  
+    port: process.env.Database_PORT,  
   });
 
-  return await pool.getConnection();
+  return await pool;
 };
 
-export default {
-  getConnection,
-};
+module.exports={
+  getConnection
+}
