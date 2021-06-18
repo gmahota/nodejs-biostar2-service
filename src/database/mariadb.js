@@ -1,7 +1,7 @@
-var mariadb = require ("mariadb");
+var mariadb = require ("mariadb/callback");
 
 const getConnection = async () => {
-  var pool = mariadb.createPool({
+  var pool = mariadb.createConnection({
     host: process.env.Database_HOST,
     database: process.env.Database,
     user: process.env.Database_USERNAME,
@@ -10,7 +10,7 @@ const getConnection = async () => {
     port: process.env.Database_PORT,  
   });
 
-  return await pool.getConnection();
+  return await pool;
 };
 
 module.exports={

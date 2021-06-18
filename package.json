@@ -4,15 +4,14 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "node src/server.js",
-    "build": "npx babel src --out-dir dist"
+    "test": "nodemon .",
+    "start": "node .",
+    "dev": "node ."
   },
   "dependencies": {
-    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
     "mariadb": "^2.5.3",
+    "moment": "^2.29.1",
     "mysql": "^2.18.1",
     "path": "^0.12.7",
     "uuidv4": "^6.2.7",
