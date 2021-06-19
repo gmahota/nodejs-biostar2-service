@@ -3,6 +3,12 @@ var mysql = require("../../database/mysql.js");
 const state = require("./state.js");
 var moment = require("moment");
 
+const api = axios.create({
+  baseURL:process.env.Attendance_Host,
+  headers: {'Authorization': 'Bearer '+process.env.Attendance_ApiKey}
+});
+
+
 async function robot() {
   let content = state.load();
   await getConnection();
