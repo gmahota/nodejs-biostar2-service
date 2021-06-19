@@ -1,19 +1,21 @@
 var mariadb = require("../../database/mariadb.js");
 var mysql = require("../../database/mysql.js");
 var moment = require("moment");
-
+var axios = require("axios")
 const state = require("./state.js");
 
-const api = axios.create({
-  baseURL:process.env.Attendance_Host,
-  headers: {'Authorization': 'Bearer '+process.env.Attendance_ApiKey}
-});
+
 
 async function robot() {
+  const api = axios.create({
+    baseURL:process.env.Attendance_Host,
+    headers: {'Authorization': 'Bearer '+process.env.Attendance_ApiKey}
+  });
+  
   let content = state.load();
   await getConnection();
 
-  await getUsers(content.user.lastId, function (result) {
+  await getUsers(content.user.lastId,async function (result) {
     
     if (!!result) {
       if (result.length > 0) {
@@ -36,7 +38,7 @@ async function robot() {
 
   });
 
-  await getUsersForUpdate(content.user.lastDtUpdate, function (result) {
+  await getUsersForUpdate(content.user.lastDtUpdate, async function (result) {
   
     if (!!result) {
       if (result.length > 0) {
