@@ -13,10 +13,16 @@ async function robot() {
         console.log(
           "************Inicio de Group deve fazer Importacao**************"
         );
-        console.log(result);
-        content = state.load();
-        content.group.lastDtUpdate = result[result.length - 1].updatedAt;
-        state.saveJson(content);
+        console.log(result);       
+
+        //Chamada a api do attendance para gravação
+        await api.post("api/attendance/usergroups",result).then((response) => {
+          console.log(response)  
+          content = state.load();
+          content.group.lastDtUpdate = result[result.length - 1].updatedAt;
+          state.saveJson(content);
+          state.saveJson(content);
+        }) 
 
         console.log(
           "************Fim de Group Importacao**********************"

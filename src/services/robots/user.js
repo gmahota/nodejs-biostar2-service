@@ -4,6 +4,11 @@ var moment = require("moment");
 
 const state = require("./state.js");
 
+const api = axios.create({
+  baseURL:process.env.Attendance_Host,
+  headers: {'Authorization': 'Bearer '+process.env.Attendance_ApiKey}
+});
+
 async function robot() {
   let content = state.load();
   await getConnection();
@@ -14,11 +19,15 @@ async function robot() {
       if (result.length > 0) {
         console.log("************Incio deve fazer Importacao**************");
         console.log(result);
-        content = state.load();
-        content.user.lastId = result[result.length - 1].user_id;
-        state.saveJson(content);
+        
 
-      
+        //Chamada a api do attendance para gravação
+        await api.post("api/attendance/user",result).then((response) => {
+          console.log(response)  
+          content = state.load();
+          content.user.lastId = result[result.length - 1].user_id;
+          state.saveJson(content);
+        })       
         
         console.log("************Fim Importacao**********************");
         
@@ -28,15 +37,19 @@ async function robot() {
   });
 
   await getUsersForUpdate(content.user.lastDtUpdate, function (result) {
-    
-
+  
     if (!!result) {
       if (result.length > 0) {
         console.log("************Inicio deve fazer update************");
         console.log(result);
-        content = state.load();
-        content.user.lastDtUpdate = result[result.length - 1].updatedAt;
-        state.saveJson(content);
+        
+
+        await api.post("api/attendance/user",result).then((response) => {
+          console.log(response)  
+          content = state.load();
+          content.user.lastDtUpdate = result[result.length - 1].updatedAt;
+          state.saveJson(content);
+        })       
 
         console.log("************Fim deve fazer update***************");
       }

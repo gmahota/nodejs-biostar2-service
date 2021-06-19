@@ -3,6 +3,12 @@ var mysql = require("../../database/mysql.js");
 const state = require("./state.js");
 var moment = require("moment");
 
+const api = axios.create({
+  baseURL:process.env.Attendance_Host,
+  headers: {'Authorization': 'Bearer '+process.env.Attendance_ApiKey}
+});
+
+
 async function robot(){
 
   let content = state.load();
@@ -16,9 +22,15 @@ async function robot(){
           "************Inicio de Group deve fazer Importacao**************"
         );
         console.log(result);
-        content = state.load();
-        content.punchLog.lastDtUpdate = result[result.length - 1].updatedAt;
-        state.saveJson(content);
+        
+
+        //Chamada a api do attendance para gravação
+        await api.post("api/attendance/punchLogs",result).then((response) => {
+          console.log(response)  
+          content = state.load();
+          content.punchLog.lastDtUpdate = result[result.length - 1].updatedAt;
+          state.saveJson(content);
+        }) 
 
         console.log(
           "************Fim de Group Importacao**********************"

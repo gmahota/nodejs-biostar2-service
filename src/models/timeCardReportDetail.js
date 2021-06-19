@@ -1,7 +1,5 @@
 var mariadb = require ("./../database/mariadb.js") ;
 var mysql = require("../database/mysql.js");
-
-
 var getConnection= async() =>{
   const database_type =process.env.Database_Type||"";
 
