@@ -18,7 +18,7 @@ async function robot(){
 
   await getConnection()
 
-  await getPunchLogs(content.punchLog.lastDtUpdate, async function (result){
+  await getPunchLogs(content, async function (result){
     if (!!result) {
       if (result.length > 0) {
         console.log(
@@ -61,21 +61,20 @@ async function robot(){
     }
   };
 
-  async function getPunchLogs(lastDtUpdate, callback){
+  async function getPunchLogs(content, callback){
     let conn;
 
     try {
       conn =await getConnection();
   
-      let date = moment(lastDtUpdate).format("YYYY/MM/DD HH:mm:ss");
+      let date = moment(content.punchLog.lastDtUpdate).format("YYYY/MM/DD HH:mm:ss");
 //p1.devnm as device,p1.devid as deviceId ,
       await conn.query(
-        `select p1.id id,p1.user_id as userId,p1.user_name as userName,
+        `select p1.id id,p1.user_id as userId,
            p1.devdt as date,
-           updatedAt from punchlog p1 
-            where updatedAt > '${date}'
-           limit 200
-           ;
+           p1.updatedAt from punchlog p1 
+            where p1.updatedAt > '${date}'
+            ${content.punchLog.limit};
         `, function(err,result) {
           if (err) console.log(err);
           callback(result)
