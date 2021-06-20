@@ -68,13 +68,13 @@ async function robot(){
       conn =await getConnection();
   
       let date = moment(lastDtUpdate).format("YYYY/MM/DD HH:mm:ss");
-
+//p1.devnm as device,p1.devid as deviceId ,
       await conn.query(
-        `select p1.id,p1.user_id,p1.user_name,
+        `select p1.id id,p1.user_id as userId,p1.user_name as userName,
            p1.devdt as date,
-           p1.devnm as device,p1.devid as deviceId ,updatedAt from punchlog p1 
+           updatedAt from punchlog p1 
             where updatedAt > '${date}'
-           limit 20
+           limit 200
            ;
         `, function(err,result) {
           if (err) console.log(err);

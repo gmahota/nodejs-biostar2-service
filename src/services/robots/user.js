@@ -24,7 +24,7 @@ async function robot() {
         
 
         //Chamada a api do attendance para gravação
-        await api.post("api/attendance/user",result).then((response) => {
+        await api.post("api/attendance/users",result).then((response) => {
           console.log(response)  
           content = state.load();
           content.user.lastId = result[result.length - 1].user_id;
@@ -46,7 +46,7 @@ async function robot() {
         console.log(result);
         
 
-        await api.post("api/attendance/user",result).then((response) => {
+        await api.post("api/attendance/users",result).then((response) => {
           console.log(response)  
           content = state.load();
           content.user.lastDtUpdate = result[result.length - 1].updatedAt;
@@ -89,7 +89,7 @@ async function robot() {
       var dat;
 
       await conn.query(
-        `select user_id,name,ugid,'G',createdAt,updatedAt from user where user_id > ${id} limit 10;`,
+        `select user_id as id ,name,ugid as userGroupId,'G' as scheduleByUserOrGroup,createdAt,updatedAt from user where user_id > ${id} limit 200;`,
         (err, rows) => {
           callback(rows);
         }
@@ -110,7 +110,8 @@ async function robot() {
 
       let date = moment(lastDtUpdate).format("YYYY/MM/DD HH:mm:ss");
 
-      let query = `select user_id,name,ugid,'G',createdAt,updatedAt from user where updatedAt > '${date}' limit 10;`;
+      
+      let query = `select user_id as id,name,ugid as userGroupId,'G' as scheduleByUserOrGroup,createdAt,updatedAt from user where updatedAt > '${date}' limit 200;`;
 
       await conn.query(query, function (err, result) {
         if (err) console.log(err);
