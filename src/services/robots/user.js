@@ -1,57 +1,49 @@
 var mariadb = require("../../database/mariadb.js");
 var mysql = require("../../database/mysql.js");
 var moment = require("moment");
-var axios = require("axios")
+var axios = require("axios");
 const state = require("./state.js");
-
-
 
 async function robot() {
   const api = axios.create({
-    baseURL:process.env.Attendance_Host,
-    headers: {'Authorization': 'Bearer '+process.env.Attendance_ApiKey}
+    baseURL: process.env.Attendance_Host,
+    headers: { Authorization: "Bearer " + process.env.Attendance_ApiKey },
   });
-  
+
+  api.defaults.timeout = 1000 * 60 * 2;
+
   let content = state.load();
   await getConnection();
 
-  await getUsers(content.user.lastId,async function (result) {
-    
-    if (!!result) {
-      if (result.length > 0) {
-        console.log("************Incio deve fazer Importacao**************");
-        console.log(result);
-        
+  // await getUsers(content, async function (result) {
+  //   if (!!result) {
+  //     if (result.length > 0) {
+  //       console.log("************Incio deve fazer Importacao**************");
+  //       console.log(result);
 
-        //Chamada a api do attendance para gravação
-        await api.post("api/attendance/users",result).then((response) => {
-          console.log(response)  
-          content = state.load();
-          content.user.lastId = result[result.length - 1].user_id;
-          state.saveJson(content);
-        })       
-        
-        console.log("************Fim Importacao**********************");
-        
-      }
-    }
+  //       //Chamada a api do attendance para gravação
+  //       await api.post("api/attendance/users", result).then((response) => {
+  //         console.log(response);
+  //         content = state.load();
+  //         content.user.lastId = result[result.length - 1].user_id;
+  //         state.saveJson(content);
+  //       });
 
-  });
+  //       console.log("************Fim Importacao**********************");
+  //     }
+  //   }
+  // });
 
-  await getUsersForUpdate(content.user.lastDtUpdate, async function (result) {
-  
+  await getUsersForUpdate(content, async function (result) {
     if (!!result) {
       if (result.length > 0) {
         console.log("************Inicio deve fazer update************");
-        console.log(result);
-        
-
-        await api.post("api/attendance/users",result).then((response) => {
-          console.log(response)  
+       
+        await api.post("api/attendance/users", result).then((response) => {
           content = state.load();
           content.user.lastDtUpdate = result[result.length - 1].updatedAt;
           state.saveJson(content);
-        })       
+        });
 
         console.log("************Fim deve fazer update***************");
       }
@@ -89,8 +81,25 @@ async function robot() {
       var dat;
 
       await conn.query(
-        `select user_id as id ,name,ugid as userGroupId,'G' as scheduleByUserOrGroup,createdAt,updatedAt from user where user_id > ${id} limit 200;`,
+        `select user_id as id ,name,ugid as userGroupId,'G' as scheduleByUserOrGroup,
+          createdAt,updatedAt from user where user_id > ${id} limit 200;`,
         (err, rows) => {
+          
+          if (err) console.log(err);
+          
+          rows = rows.map((row) => {
+            return {
+              id: row.id,
+              name: row.name,
+              scheduleByUserOrGroup: row.scheduleByUserOrGroup,
+              createdAt: row.createdAt,
+              updatedAt: row.updatedAt,
+              userGroup: {
+                id: row.userGroupId,
+              },
+            };
+          });
+
           callback(rows);
         }
       );
@@ -102,20 +111,35 @@ async function robot() {
     }
   }
 
-  async function getUsersForUpdate(lastDtUpdate, callback) {
+  async function getUsersForUpdate(content, callback) {
     let conn;
 
     try {
       conn = await getConnection();
 
+      const lastDtUpdate = content.user.lastDtUpdate
+      const limit =content.user.limit
+
       let date = moment(lastDtUpdate).format("YYYY/MM/DD HH:mm:ss");
 
-      
-      let query = `select user_id as id,name,ugid as userGroupId,'G' as scheduleByUserOrGroup,createdAt,updatedAt from user where updatedAt > '${date}' limit 200;`;
+      let query = `select user_id as id,name,ugid as userGroupId,'G' as scheduleByUserOrGroup,
+        createdAt,updatedAt from user where updatedAt > '${date}' ${limit};`;
 
       await conn.query(query, function (err, result) {
         if (err) console.log(err);
-        callback(result);
+          rows = result.map((row) => {
+            return {
+              id: row.id,
+              name: row.name,
+              scheduleByUserOrGroup: row.scheduleByUserOrGroup,
+              createdAt: row.createdAt,
+              updatedAt: row.updatedAt,
+              userGroup: {
+                id: row.userGroupId,
+              },
+            };
+          });
+        callback(rows);
       });
     } catch (err) {
       throw err;
