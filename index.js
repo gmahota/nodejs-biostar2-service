@@ -2,8 +2,8 @@ var dotenv = require("dotenv").config();
 
 const robots = require("./src/services/robots/index.js");
 
-//  robots.group()
+//robots.group()
 
-//robots.user()
+robots.user()
 
-robots.punchLog()
+// robots.punchLog()

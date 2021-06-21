@@ -4,9 +4,6 @@ const state = require("./state.js");
 var moment = require("moment");
 var axios = require("axios")
 
-
-
-
 async function robot(){
 
   const api = axios.create({
