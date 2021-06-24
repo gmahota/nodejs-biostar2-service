@@ -71,7 +71,7 @@ async function robot() {
       let date = moment(lastDtUpdate).format("YYYY/MM/DD HH:mm:ss");
 
       await conn.query(
-        `select id,name,createdAt,updatedAt,parent_id from usergroup where updatedAt > '${date}';`,
+        `select id,name,createdAt,updatedAt,parent_id from usergroup where updatedAt > '${date}' order by updatedAt asc;`,
         function (err, result) {
           if (err) console.log(err);
           callback(result);
@@ -81,6 +81,15 @@ async function robot() {
       throw err;
     } finally {
       //if (conn) conn.release(); //release to pool
+      const database_type =process.env.Database_Type||"";
+      switch (database_type) {
+        case "mysql":
+          conn.release();
+          break;
+        case "mariadb":
+          conn.end();
+          break;
+      }
     }
   }
 }

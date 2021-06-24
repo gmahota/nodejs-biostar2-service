@@ -1,1 +1,13 @@
-{"punchLog":{"limit":"limit 200","lastId":1,"lastDtUpdate":"2020-08-28T14:16:59.000Z"},"user":{"limit":"limit 15","lastDtUpdate":"2021-05-18T07:59:40.000Z","lastId":1},"group":{"limit":"limit 30","lastDtUpdate":"2000-05-30T18:08:33.000Z"}}
+{
+  "punchLog": {
+    "limit": "limit 200",
+    "lastId": 1,
+    "lastDtUpdate": "2020-09-15T13:02:05.000Z"
+  },
+  "user": {
+    "limit": "limit 15",
+    "lastDtUpdate": "2000-05-24T12:37:43.000Z",
+    "lastId": 1
+  },
+  "group": { "limit": "limit 30", "lastDtUpdate": "2021-05-30T18:08:33.000Z" }
+}

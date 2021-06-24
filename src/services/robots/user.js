@@ -38,7 +38,7 @@ async function robot() {
     if (!!result) {
       if (result.length > 0) {
         console.log("************Inicio deve fazer update************");
-       
+
         await api.post("api/attendance/users", result).then((response) => {
           content = state.load();
           content.user.lastDtUpdate = result[result.length - 1].updatedAt;
@@ -84,9 +84,8 @@ async function robot() {
         `select user_id as id ,name,ugid as userGroupId,'G' as scheduleByUserOrGroup,
           createdAt,updatedAt from user where user_id > ${id} limit 200;`,
         (err, rows) => {
-          
           if (err) console.log(err);
-          
+
           rows = rows.map((row) => {
             return {
               id: row.id,
@@ -108,6 +107,15 @@ async function robot() {
       throw err;
     } finally {
       //if (conn) conn.release(); //release to pool
+      const database_type =process.env.Database_Type||"";
+      switch (database_type) {
+        case "mysql":
+          conn.release();
+          break;
+        case "mariadb":
+          conn.end();
+          break;
+      }
     }
   }
 
@@ -117,34 +125,42 @@ async function robot() {
     try {
       conn = await getConnection();
 
-      const lastDtUpdate = content.user.lastDtUpdate
-      const limit =content.user.limit
+      const lastDtUpdate = content.user.lastDtUpdate;
+      const limit = content.user.limit;
 
       let date = moment(lastDtUpdate).format("YYYY/MM/DD HH:mm:ss");
 
       let query = `select user_id as id,name,ugid as userGroupId,'G' as scheduleByUserOrGroup,
-        createdAt,updatedAt from user where updatedAt > '${date}' ${limit};`;
+        createdAt,updatedAt from user where updatedAt > '${date}' order by updatedAt asc ${limit};`;
 
       await conn.query(query, function (err, result) {
         if (err) console.log(err);
-          rows = result.map((row) => {
-            return {
-              id: row.id,
-              name: row.name,
-              scheduleByUserOrGroup: row.scheduleByUserOrGroup,
-              createdAt: row.createdAt,
-              updatedAt: row.updatedAt,
-              userGroup: {
-                id: row.userGroupId,
-              },
-            };
-          });
+        rows = result?.map((row) => {
+          return {
+            id: row.id,
+            name: row.name,
+            scheduleByUserOrGroup: row.scheduleByUserOrGroup,
+            createdAt: row.createdAt,
+            updatedAt: row.updatedAt,
+            userGroup: {
+              id: row.userGroupId,
+            },
+          };
+        });
         callback(rows);
       });
     } catch (err) {
       throw err;
     } finally {
-      //if (conn) conn.release(); //release to pool
+      const database_type =process.env.Database_Type||"";
+      switch (database_type) {
+        case "mysql":
+          conn.release();
+          break;
+        case "mariadb":
+          conn.end();
+          break;
+      }
     }
   }
 }

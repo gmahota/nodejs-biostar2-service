@@ -71,7 +71,7 @@ async function robot(){
            p1.devdt as date,
            p1.updatedAt from punchlog p1 
             where p1.updatedAt > '${date}'
-            ${content.punchLog.limit};
+            order by p1.updatedAt asc  ${content.punchLog.limit} ;
         `, function(err,result) {
           if (err) console.log(err);
           callback(result)
@@ -83,7 +83,16 @@ async function robot(){
     } catch (err) {
       throw err;
     } finally {
+      const database_type =process.env.Database_Type||"";
       //if (conn) conn.release(); //release to pool
+      switch (database_type) {
+        case "mysql":
+          conn.release();
+          break;
+        case "mariadb":
+          conn.end();
+          break;
+      }
     }
   };
 
