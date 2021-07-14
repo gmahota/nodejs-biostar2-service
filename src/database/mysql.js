@@ -26,6 +26,32 @@ const createConnection = async () => {
   return await pool;
 };
 
+const getSlaveConnection = async () => {
+  var pool = mysql.createPool({
+    host: process.env.Slave_HOST,
+    database: process.env.Slave,
+    user: process.env.Slave_USERNAME,
+    password: process.env.Slave_PASSWORD,
+    connectionLimit: 5,
+    port: process.env.Slave_PORT,
+  });
+
+  return await pool.getConnection();
+};
+
+const createSlaveConnection = async () => {
+  var pool = mysql.createConnection({
+    host: process.env.Slave_HOST,
+    database: process.env.Slave,
+    user: process.env.Slave_USERNAME,
+    password: process.env.Slave_PASSWORD,
+    connectionLimit: 5,
+    port: process.env.Slave_PORT,
+  });
+
+  return await pool;
+};
+
 module.exports =  {
-  getConnection,createConnection
+  getConnection,createConnection, getSlaveConnection, createSlaveConnection
 };

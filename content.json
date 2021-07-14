@@ -2,7 +2,8 @@
   "punchLog": {
     "limit": "limit 200",
     "lastId": 1,
-    "lastDtUpdate": "2020-09-15T13:02:05.000Z"
+    "lastDtUpdate": "2020-09-15T13:02:05.000Z",
+    "prevLastDtUpdate": "2017-09-15T13:02:05.000Z"
   },
   "user": {
     "limit": "limit 15",

@@ -13,6 +13,19 @@ const getConnection = async () => {
   return await pool;
 };
 
+const getSlaveConnection = async () => {
+  var pool = mariadb.createConnection({
+    host: process.env.Slave_HOST,
+    database: process.env.Slave,
+    user: process.env.Slave_USERNAME,
+    password: process.env.Slave_PASSWORD,
+    connectionLimit: 5,
+    port: process.env.Slave_PORT,  
+  });
+
+  return await pool;
+};
+
 module.exports={
-  getConnection
+  getConnection, getSlaveConnection
 }

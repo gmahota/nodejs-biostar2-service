@@ -28,9 +28,18 @@ async function robot(){
         await api.post("api/attendance/punchLogs",result).then((response) => {
           console.log(response)  
           content = state.load();
+          content.punchLog.prevLastDtUpdate = content.punchLog.lastDtUpdate;
           content.punchLog.lastDtUpdate = result[result.length - 1].updatedAt;
           state.saveJson(content);
         }) 
+
+        console.log(
+          "************Fim da importacao do punchLog, agora segue-se update **********************"
+        );
+
+        //Chamada do procedure para update do punchLog
+        await updateSlavePunchLog();
+        
 
         console.log(
           "************Fim de Group Importacao**********************"
@@ -84,6 +93,37 @@ async function robot(){
       throw err;
     } finally {
       const database_type =process.env.Database_Type||"";
+      //if (conn) conn.release(); //release to pool
+      switch (database_type) {
+        case "mysql":
+          conn.release();
+          break;
+        case "mariadb":
+          conn.end();
+          break;
+      }
+    }
+  };
+
+  async function updateSlavePunchLog(content, callback){
+    let conn;
+
+    try {
+      conn =await getSlaveConnection();
+  
+      let date = moment(content.punchLog.prevLastDtUpdate).format("YYYY/MM/DD HH:mm:ss");
+      await conn.query(`Call updatePunchLog('${date}');`, function(err,result) {
+          if (err) console.log(err);
+          callback(result)
+        }
+      );
+    
+        
+      
+    } catch (err) {
+      throw err;
+    } finally {
+      const database_type =process.env.Slave_Type||"";
       //if (conn) conn.release(); //release to pool
       switch (database_type) {
         case "mysql":
