@@ -13,7 +13,9 @@ async function robot(){
   
   let content = state.load();
 
+  
   await getConnection()
+  "************get connection passou**************"
 
   await getPunchLogs(content, async function (result){
     if (!!result) {
@@ -38,7 +40,16 @@ async function robot(){
         );
 
         //Chamada do procedure para update do punchLog
-        await updateSlavePunchLog();
+        await updateSlavePunchLog(content, async function (result){
+          if (!!result) {
+            if (result.length > 0) {
+              console.log(
+                "************Inicio de Group deve fazer Importacao**************"
+              );
+              console.log(result);;
+            }
+          }
+        });
         
 
         console.log(
@@ -47,6 +58,26 @@ async function robot(){
       }
     }
   });
+
+  async function getSlaveConnection(){
+    const slave_type =process.env.Slave_Type||"";
+  
+    try{
+  
+      switch(slave_type){
+        case "mysql":return await mysql.createSlaveConnection()
+        case "mariadb":return await mariadb.getSlaveConnection()
+      }
+
+      throw new Error(
+          database_type.length===0?
+            "Please Fill on .env the Database_Type" :
+            `${database_type} -  Not Yet Implemented`)
+    }catch(e){
+      throw e
+    }
+  };
+  
 
   async function getConnection (){
     const database_type =process.env.Database_Type||"";
@@ -109,7 +140,10 @@ async function robot(){
     let conn;
 
     try {
+      "************get Slave connection **************"
       conn =await getSlaveConnection();
+
+      console.log(conn)
   
       let date = moment(content.punchLog.prevLastDtUpdate).format("YYYY/MM/DD HH:mm:ss");
       await conn.query(`Call updatePunchLog('${date}');`, function(err,result) {
@@ -121,6 +155,9 @@ async function robot(){
         
       
     } catch (err) {
+      console.log("************Erro no call updatePunchLog  **************")
+      console.log(err)
+
       throw err;
     } finally {
       const database_type =process.env.Slave_Type||"";

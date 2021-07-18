@@ -1,14 +1,1 @@
-{
-  "punchLog": {
-    "limit": "limit 200",
-    "lastId": 1,
-    "lastDtUpdate": "2020-09-15T13:02:05.000Z",
-    "prevLastDtUpdate": "2017-09-15T13:02:05.000Z"
-  },
-  "user": {
-    "limit": "limit 15",
-    "lastDtUpdate": "2000-05-24T12:37:43.000Z",
-    "lastId": 1
-  },
-  "group": { "limit": "limit 30", "lastDtUpdate": "2021-05-30T18:08:33.000Z" }
-}
+{"punchLog":{"limit":"limit 200","lastId":1,"lastDtUpdate":"2020-09-23T05:21:46.000Z","prevLastDtUpdate":"2020-09-22T12:47:30.000Z"},"user":{"limit":"limit 15","lastDtUpdate":"2000-05-24T12:37:43.000Z","lastId":1},"group":{"limit":"limit 30","lastDtUpdate":"2021-05-30T18:08:33.000Z"}}

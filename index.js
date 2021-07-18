@@ -4,24 +4,24 @@ const robots = require("./src/services/robots/index.js");
 
 const delay =async (amount=758) => new Promise((resolve, reject) => setTimeout(resolve,amount)) 
 
- delay() 
-schedule.scheduleJob('*/20 * * * * *', async ()=>{
-  console.log('Inicio do job - UserGroups')
+//  delay() 
+// schedule.scheduleJob('*/20 * * * * *', async ()=>{
+//   console.log('Inicio do job - UserGroups')
 
-  await robots.group()
+//   await robots.group()
 
-  console.log('Fim do UserGroups')
-})
+//   console.log('Fim do UserGroups')
+// })
 
 
-delay()
-schedule.scheduleJob('*/20 * * * * *', async ()=>{
-  console.log('Inicio do job - User')
+// delay()
+// schedule.scheduleJob('*/20 * * * * *', async ()=>{
+//   console.log('Inicio do job - User')
 
-  await robots.user()
+//   await robots.user()
 
-  console.log('Fim do job - User')
-})
+//   console.log('Fim do job - User')
+// })
 
 delay()
 schedule.scheduleJob('*/20 * * * * *', async ()=>{
